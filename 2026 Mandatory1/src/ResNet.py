@@ -30,33 +30,37 @@ class ResNet(nn.Module):
             blockType = BasicBlock
 
         elif num_layers == 34:
-            # TODO: 
             # 1) Define the number of blocks per stage. Hint: ResNet-34 has 3, 4, 6, and 3 blocks per stage.
             # 2) Set the expansion factor. Hint: ResNet-34 uses BasicBlock, which has an expansion factor of 1.
             # 3) Set the block type to BasicBlock.
-            pass
+            block_counts = [3, 4, 6, 3]
+            self.expansion = 1
+            blockType = BasicBlock
 
         
         elif num_layers == 50:
-            # TODO:
             # 1) Define the number of blocks per stage. Hint: ResNet-50 uses bottleneck blocks with 3, 4, 6, and 3 blocks per stage.
             # 2) Set the expansion factor. Hint: Bottleneck blocks have an expansion factor of 4.
             # 3) Set the block type to BottleneckBlock.
-            pass
+            block_counts = [3, 4, 6, 3]
+            self.expansion = 4
+            blockType = BottleneckBlock
 
         elif num_layers == 101:
-            # TODO:
             # 1) Define the number of blocks per stage. Hint: ResNet-101 uses bottleneck blocks with 3, 4, 23, and 3 blocks per stage.
             # 2) Set the expansion factor. Hint: Bottleneck blocks have an expansion factor of 4.
             # 3) Set the block type to BottleneckBlock.
-            pass
+            block_counts = [3, 4, 23, 3]
+            self.expansion = 4
+            blockType = BottleneckBlock
         
         elif num_layers == 152:
-            # TODO:
             # 1) Define the number of blocks per stage. Hint: ResNet-152 uses bottleneck blocks with 3, 8, 36, and 3 blocks per stage.
             # 2) Set the expansion factor. Hint: Bottleneck blocks have an expansion factor of 4.
             # 3) Set the block type to BottleneckBlock.
-            pass
+            block_counts = [3, 8, 36, 3]
+            self.expansion = 4
+            blockType = BottleneckBlock
         
         else:
             raise ValueError("Only ResNet-18, ResNet-34, ResNet-50, ResNet-101, and ResNet-152 are supported in this implementation.")
