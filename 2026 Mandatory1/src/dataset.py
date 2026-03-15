@@ -26,10 +26,14 @@ class SceneDataset(Dataset):
 def load_all_filepaths(data_root):
     filepaths, labels = [], []
     for i, cls in enumerate(CLASSES):
-        files = sorted(glob.glob(os.path.join(data_root, cls, "*.jpg")))
+        files = sorted(glob.glob(os.path.join(data_root, cls, "*.jpg"))) # sort to keep the same order
         filepaths.extend(files)
         labels.extend([i] * len(files))
-    return np.array(filepaths), np.array(labels)
+
+    # convert flattened filepaths to np
+    filepaths = np.array(filepaths)
+    labels = np.array(labels)
+    return filepaths, labels
 
 
 def stratified_split(data_root, seed=42):
