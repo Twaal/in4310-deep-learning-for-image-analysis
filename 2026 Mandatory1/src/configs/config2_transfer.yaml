@@ -1,0 +1,15 @@
+model:
+  num_layers: 18
+  pretrained: true
+
+training:
+  epochs: 50
+  batch_size: 16
+  lr: 0.01
+  optimizer: sgd
+  momentum: 0.9
+  weight_decay: 0.0005
+
+augmentation: false
+
+save_path: models/model2.pth

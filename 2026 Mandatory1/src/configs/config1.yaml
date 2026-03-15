@@ -1,0 +1,14 @@
+model:
+  num_layers: 18
+  pretrained: false
+
+training:
+  epochs: 50
+  batch_size: 16
+  lr: 0.001
+  optimizer: adam
+  weight_decay: 0.0001
+
+augmentation: false
+
+save_path: models/model1.pth
