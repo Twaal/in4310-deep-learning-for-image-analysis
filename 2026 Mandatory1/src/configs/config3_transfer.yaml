@@ -11,4 +11,4 @@ training:
 
 augmentation: true
 
-save_path: models/model3.pth
+save_path: models/model3_transfer.pth

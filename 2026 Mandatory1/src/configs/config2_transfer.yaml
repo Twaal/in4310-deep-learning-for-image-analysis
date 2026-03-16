@@ -12,4 +12,4 @@ training:
 
 augmentation: false
 
-save_path: models/model2.pth
+save_path: models/model2_transfer.pth
