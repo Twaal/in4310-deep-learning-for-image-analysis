@@ -1,0 +1,240 @@
+Task 1)
+part b) I chose resNet18 since I will be trainig on my laptop, and want to have quicker wall-clock training time to facilitate quicker iterations for experiments.
+part c & d) I trained three models with different hyper parameters. Here is the stdout:
+```
+(base) twaal@twaal-xps:/mnt/c/Users/theod/Documents/uio/in4310/in4310-deep-learning-for-image-analysis/2026 Mandatory1$ make train
+docker run --rm --name mandatory1 --gpus all --shm-size=2g -v ./data:/app/data -v ./models:/app/models mandatory1 python src/train.py
+Using device: cuda
+Train: 12034, Val: 2000, Test: 3000
+Dataset OK
+
+Starting config1.yaml
+Final model will be saved to: /app/src/../models/model1.pth
+[1/25] train_loss=1.0405 val_loss=0.8675 test_loss=0.8192 mAP=0.7717 acc=0.6938
+Best mAP=0.7717
+[2/25] train_loss=0.7543 val_loss=1.1766 test_loss=1.2452 mAP=0.7800 acc=0.6453
+Best mAP=0.7800
+[3/25] train_loss=0.6563 val_loss=0.6551 test_loss=0.6379 mAP=0.8806 acc=0.7400
+Best mAP=0.8806
+[4/25] train_loss=0.5923 val_loss=0.7801 test_loss=0.7362 mAP=0.8526 acc=0.7059
+[5/25] train_loss=0.5553 val_loss=0.7187 test_loss=0.7035 mAP=0.8545 acc=0.7387
+[6/25] train_loss=0.5161 val_loss=1.3925 test_loss=1.3148 mAP=0.8021 acc=0.6499
+[7/25] train_loss=0.4997 val_loss=0.4760 test_loss=0.4451 mAP=0.9082 acc=0.8375
+Best mAP=0.9082
+[8/25] train_loss=0.4767 val_loss=0.4822 test_loss=0.4428 mAP=0.9187 acc=0.8362
+Best mAP=0.9187
+[9/25] train_loss=0.4517 val_loss=0.4539 test_loss=0.4485 mAP=0.9221 acc=0.8453
+Best mAP=0.9221
+[10/25] train_loss=0.4357 val_loss=1.0661 test_loss=0.9612 mAP=0.8474 acc=0.7077
+[11/25] train_loss=0.3982 val_loss=0.5149 test_loss=0.4976 mAP=0.9173 acc=0.8236
+[12/25] train_loss=0.3841 val_loss=1.4869 test_loss=1.4106 mAP=0.8051 acc=0.5953
+[13/25] train_loss=0.3616 val_loss=1.1854 test_loss=1.0892 mAP=0.8095 acc=0.6171
+[14/25] train_loss=0.3428 val_loss=0.6986 test_loss=0.5930 mAP=0.8863 acc=0.7666
+[15/25] train_loss=0.3364 val_loss=0.4661 test_loss=0.4481 mAP=0.9313 acc=0.8402
+Best mAP=0.9313
+[16/25] train_loss=0.3128 val_loss=0.4889 test_loss=0.4661 mAP=0.9161 acc=0.8314
+[17/25] train_loss=0.2949 val_loss=0.3697 test_loss=0.3405 mAP=0.9386 acc=0.8794
+Best mAP=0.9386
+[18/25] train_loss=0.2625 val_loss=0.7140 test_loss=0.6723 mAP=0.8590 acc=0.7490
+[19/25] train_loss=0.2444 val_loss=0.6533 test_loss=0.6021 mAP=0.9098 acc=0.7985
+[20/25] train_loss=0.2247 val_loss=0.7194 test_loss=0.6399 mAP=0.8975 acc=0.7676
+[21/25] train_loss=0.2112 val_loss=0.5740 test_loss=0.5695 mAP=0.8844 acc=0.8062
+[22/25] train_loss=0.1748 val_loss=0.6393 test_loss=0.5851 mAP=0.9148 acc=0.7978
+[23/25] train_loss=0.1699 val_loss=0.4824 test_loss=0.4396 mAP=0.9226 acc=0.8569
+[24/25] train_loss=0.1483 val_loss=0.5667 test_loss=0.5310 mAP=0.9212 acc=0.8360
+[25/25] train_loss=0.1385 val_loss=0.4767 test_loss=0.4636 mAP=0.9309 acc=0.8713
+Done, best mAP: 0.9386
+
+Starting config2.yaml
+Final model will be saved to: /app/src/../models/model2.pth
+[1/25] train_loss=1.1966 val_loss=1.0222 test_loss=0.9980 mAP=0.7231 acc=0.5802
+Best mAP=0.7231
+[2/25] train_loss=0.8517 val_loss=0.9639 test_loss=0.8699 mAP=0.7630 acc=0.6714
+Best mAP=0.7630
+[3/25] train_loss=0.6877 val_loss=0.6642 test_loss=0.6362 mAP=0.8703 acc=0.7557
+Best mAP=0.8703
+[4/25] train_loss=0.5864 val_loss=1.5822 test_loss=1.5371 mAP=0.7312 acc=0.5250
+[5/25] train_loss=0.5279 val_loss=1.5102 test_loss=1.4560 mAP=0.7649 acc=0.5706
+[6/25] train_loss=0.4827 val_loss=0.4902 test_loss=0.4445 mAP=0.9106 acc=0.8384
+Best mAP=0.9106
+[7/25] train_loss=0.4526 val_loss=0.6733 test_loss=0.6578 mAP=0.9008 acc=0.7667
+[8/25] train_loss=0.4077 val_loss=0.5923 test_loss=0.5468 mAP=0.8989 acc=0.7936
+[9/25] train_loss=0.3838 val_loss=0.5442 test_loss=0.5126 mAP=0.9191 acc=0.8222
+Best mAP=0.9191
+[10/25] train_loss=0.3553 val_loss=0.4737 test_loss=0.4352 mAP=0.9142 acc=0.8446
+[11/25] train_loss=0.3435 val_loss=0.4099 test_loss=0.4002 mAP=0.9282 acc=0.8545
+Best mAP=0.9282
+[12/25] train_loss=0.3039 val_loss=1.4268 test_loss=1.3127 mAP=0.8246 acc=0.6646
+[13/25] train_loss=0.2865 val_loss=0.4023 test_loss=0.3582 mAP=0.9394 acc=0.8742
+Best mAP=0.9394
+[14/25] train_loss=0.2698 val_loss=0.4688 test_loss=0.4235 mAP=0.9305 acc=0.8536
+[15/25] train_loss=0.2535 val_loss=0.4398 test_loss=0.4299 mAP=0.9309 acc=0.8529
+[16/25] train_loss=0.2149 val_loss=0.5717 test_loss=0.5664 mAP=0.9172 acc=0.8318
+[17/25] train_loss=0.1940 val_loss=0.5184 test_loss=0.4988 mAP=0.9156 acc=0.8272
+[18/25] train_loss=0.1948 val_loss=0.4342 test_loss=0.4072 mAP=0.9323 acc=0.8636
+[19/25] train_loss=0.1650 val_loss=0.6181 test_loss=0.5608 mAP=0.8807 acc=0.8048
+[20/25] train_loss=0.1474 val_loss=0.5121 test_loss=0.4877 mAP=0.9147 acc=0.8302
+[21/25] train_loss=0.1291 val_loss=0.5512 test_loss=0.5495 mAP=0.9230 acc=0.8436
+[22/25] train_loss=0.1264 val_loss=0.4494 test_loss=0.4190 mAP=0.9403 acc=0.8762
+Best mAP=0.9403
+[23/25] train_loss=0.0976 val_loss=0.5096 test_loss=0.5120 mAP=0.9175 acc=0.8463
+[24/25] train_loss=0.0958 val_loss=0.6982 test_loss=0.6791 mAP=0.9046 acc=0.8105
+[25/25] train_loss=0.1013 val_loss=0.5125 test_loss=0.4288 mAP=0.9281 acc=0.8670
+Done, best mAP: 0.9403
+
+Starting config3.yaml
+Final model will be saved to: /app/src/../models/model3.pth
+[1/25] train_loss=1.1127 val_loss=0.8382 test_loss=0.8177 mAP=0.7748 acc=0.6817
+Best mAP=0.7748
+[2/25] train_loss=0.8253 val_loss=1.0374 test_loss=1.0168 mAP=0.7483 acc=0.6325
+[3/25] train_loss=0.7184 val_loss=2.0406 test_loss=1.9656 mAP=0.5936 acc=0.4346
+[4/25] train_loss=0.6658 val_loss=0.6353 test_loss=0.6225 mAP=0.8831 acc=0.7504
+Best mAP=0.8831
+[5/25] train_loss=0.6272 val_loss=1.4785 test_loss=1.4420 mAP=0.7435 acc=0.6371
+[6/25] train_loss=0.5917 val_loss=0.5960 test_loss=0.6009 mAP=0.8791 acc=0.7768
+[7/25] train_loss=0.5486 val_loss=0.8296 test_loss=0.8220 mAP=0.8529 acc=0.7111
+[8/25] train_loss=0.5288 val_loss=0.9365 test_loss=0.9777 mAP=0.8164 acc=0.6971
+[9/25] train_loss=0.4999 val_loss=0.4404 test_loss=0.4301 mAP=0.9220 acc=0.8463
+Best mAP=0.9220
+[10/25] train_loss=0.4837 val_loss=0.5420 test_loss=0.5007 mAP=0.9112 acc=0.8078
+[11/25] train_loss=0.4599 val_loss=0.5623 test_loss=0.5540 mAP=0.8939 acc=0.7828
+[12/25] train_loss=0.4500 val_loss=0.8085 test_loss=0.7626 mAP=0.8619 acc=0.7321
+[13/25] train_loss=0.4404 val_loss=0.6471 test_loss=0.6335 mAP=0.8759 acc=0.7636
+[14/25] train_loss=0.4185 val_loss=0.3889 test_loss=0.3683 mAP=0.9375 acc=0.8677
+Best mAP=0.9375
+[15/25] train_loss=0.4068 val_loss=0.4263 test_loss=0.4068 mAP=0.9322 acc=0.8524
+[16/25] train_loss=0.4121 val_loss=0.4922 test_loss=0.4416 mAP=0.9250 acc=0.8230
+[17/25] train_loss=0.3859 val_loss=0.4215 test_loss=0.4089 mAP=0.9327 acc=0.8583
+[18/25] train_loss=0.3829 val_loss=0.5138 test_loss=0.4845 mAP=0.9168 acc=0.8201
+[19/25] train_loss=0.3647 val_loss=0.4889 test_loss=0.4938 mAP=0.9210 acc=0.8369
+[20/25] train_loss=0.3698 val_loss=0.4298 test_loss=0.4163 mAP=0.9331 acc=0.8430
+[21/25] train_loss=0.3641 val_loss=0.3449 test_loss=0.3090 mAP=0.9473 acc=0.8729
+Best mAP=0.9473
+[22/25] train_loss=0.3422 val_loss=0.3421 test_loss=0.3206 mAP=0.9485 acc=0.8836
+Best mAP=0.9485
+[23/25] train_loss=0.3430 val_loss=0.6524 test_loss=0.6080 mAP=0.8950 acc=0.7684
+[24/25] train_loss=0.3413 val_loss=0.6091 test_loss=0.6047 mAP=0.9022 acc=0.7892
+[25/25] train_loss=0.3430 val_loss=0.3597 test_loss=0.3312 mAP=0.9411 acc=0.8819
+Done, best mAP: 0.9485
+
+Starting config1_transfer.yaml
+/opt/conda/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/opt/conda/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+100%|██████████| 44.7M/44.7M [00:07<00:00, 6.47MB/s]
+Final model will be saved to: /app/src/../models/model1_transfer.pth
+[1/25] train_loss=0.5986 val_loss=0.4465 test_loss=0.4454 mAP=0.9365 acc=0.8415
+Best mAP=0.9365
+[2/25] train_loss=0.4472 val_loss=0.4017 test_loss=0.3716 mAP=0.9393 acc=0.8551
+Best mAP=0.9393
+[3/25] train_loss=0.4083 val_loss=0.6309 test_loss=0.5866 mAP=0.8915 acc=0.7934
+[4/25] train_loss=0.3558 val_loss=0.3527 test_loss=0.3240 mAP=0.9467 acc=0.8895
+Best mAP=0.9467
+[5/25] train_loss=0.3492 val_loss=0.4256 test_loss=0.3874 mAP=0.9410 acc=0.8440
+[6/25] train_loss=0.3047 val_loss=0.3245 test_loss=0.3220 mAP=0.9573 acc=0.8878
+Best mAP=0.9573
+[7/25] train_loss=0.2930 val_loss=0.3728 test_loss=0.3308 mAP=0.9440 acc=0.8728
+[8/25] train_loss=0.2633 val_loss=0.3718 test_loss=0.3593 mAP=0.9533 acc=0.8788
+[9/25] train_loss=0.2280 val_loss=0.5416 test_loss=0.5409 mAP=0.9278 acc=0.8280
+[10/25] train_loss=0.2258 val_loss=0.4047 test_loss=0.4164 mAP=0.9422 acc=0.8696
+[11/25] train_loss=0.1838 val_loss=0.4138 test_loss=0.4179 mAP=0.9467 acc=0.8709
+[12/25] train_loss=0.1624 val_loss=0.3948 test_loss=0.3986 mAP=0.9448 acc=0.8853
+[13/25] train_loss=0.1423 val_loss=0.4078 test_loss=0.4022 mAP=0.9450 acc=0.8846
+[14/25] train_loss=0.1310 val_loss=0.3883 test_loss=0.4096 mAP=0.9491 acc=0.8881
+[15/25] train_loss=0.1121 val_loss=0.4673 test_loss=0.4413 mAP=0.9428 acc=0.8754
+[16/25] train_loss=0.1151 val_loss=0.5129 test_loss=0.4729 mAP=0.9343 acc=0.8673
+[17/25] train_loss=0.1030 val_loss=0.5796 test_loss=0.5382 mAP=0.9307 acc=0.8457
+[18/25] train_loss=0.0983 val_loss=0.4701 test_loss=0.4523 mAP=0.9408 acc=0.8762
+[19/25] train_loss=0.0979 val_loss=0.4732 test_loss=0.4604 mAP=0.9408 acc=0.8712
+[20/25] train_loss=0.0967 val_loss=0.4119 test_loss=0.4320 mAP=0.9454 acc=0.8885
+[21/25] train_loss=0.0831 val_loss=0.4882 test_loss=0.5063 mAP=0.9381 acc=0.8737
+[22/25] train_loss=0.0965 val_loss=0.6597 test_loss=0.6097 mAP=0.9259 acc=0.8235
+[23/25] train_loss=0.0743 val_loss=0.5415 test_loss=0.5717 mAP=0.9321 acc=0.8772
+[24/25] train_loss=0.0882 val_loss=0.5121 test_loss=0.5279 mAP=0.9425 acc=0.8688
+[25/25] train_loss=0.0829 val_loss=0.4874 test_loss=0.5110 mAP=0.9442 acc=0.8834
+Done, best mAP: 0.9573
+
+Starting config2_transfer.yaml
+/opt/conda/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/opt/conda/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Final model will be saved to: /app/src/../models/model2_transfer.pth
+[1/25] train_loss=0.9356 val_loss=0.4681 test_loss=0.4167 mAP=0.9234 acc=0.8398
+Best mAP=0.9234
+[2/25] train_loss=0.5227 val_loss=0.5569 test_loss=0.5070 mAP=0.9246 acc=0.8457
+Best mAP=0.9246
+[3/25] train_loss=0.3750 val_loss=0.4369 test_loss=0.3923 mAP=0.9410 acc=0.8605
+Best mAP=0.9410
+[4/25] train_loss=0.3359 val_loss=0.3720 test_loss=0.3392 mAP=0.9500 acc=0.8741
+Best mAP=0.9500
+[5/25] train_loss=0.3069 val_loss=0.3013 test_loss=0.2747 mAP=0.9544 acc=0.8929
+Best mAP=0.9544
+[6/25] train_loss=0.2412 val_loss=0.2982 test_loss=0.3068 mAP=0.9582 acc=0.8946
+Best mAP=0.9582
+[7/25] train_loss=0.1990 val_loss=0.4225 test_loss=0.4001 mAP=0.9522 acc=0.8728
+[8/25] train_loss=0.2323 val_loss=0.3161 test_loss=0.3113 mAP=0.9544 acc=0.8969
+[9/25] train_loss=0.1665 val_loss=0.3678 test_loss=0.3500 mAP=0.9526 acc=0.8883
+[10/25] train_loss=0.1410 val_loss=0.4582 test_loss=0.4417 mAP=0.9461 acc=0.8783
+[11/25] train_loss=0.1457 val_loss=0.3596 test_loss=0.3740 mAP=0.9501 acc=0.8879
+[12/25] train_loss=0.1176 val_loss=0.4047 test_loss=0.3707 mAP=0.9398 acc=0.8744
+[13/25] train_loss=0.1125 val_loss=0.4776 test_loss=0.3990 mAP=0.9501 acc=0.8717
+[14/25] train_loss=0.0880 val_loss=0.4600 test_loss=0.4579 mAP=0.9429 acc=0.8759
+[15/25] train_loss=0.1018 val_loss=0.4307 test_loss=0.4528 mAP=0.9516 acc=0.8927
+[16/25] train_loss=0.0900 val_loss=0.4348 test_loss=0.4005 mAP=0.9405 acc=0.8853
+[17/25] train_loss=0.0831 val_loss=0.4564 test_loss=0.4360 mAP=0.9455 acc=0.8766
+[18/25] train_loss=0.1267 val_loss=0.3440 test_loss=0.3510 mAP=0.9585 acc=0.8997
+Best mAP=0.9585
+[19/25] train_loss=0.0679 val_loss=0.5067 test_loss=0.4997 mAP=0.9431 acc=0.8702
+[20/25] train_loss=0.0755 val_loss=0.4257 test_loss=0.4330 mAP=0.9489 acc=0.8858
+[21/25] train_loss=0.0725 val_loss=0.9169 test_loss=0.8382 mAP=0.8850 acc=0.7698
+[22/25] train_loss=0.0943 val_loss=0.4401 test_loss=0.4113 mAP=0.9460 acc=0.8803
+[23/25] train_loss=0.0644 val_loss=0.4860 test_loss=0.4847 mAP=0.9406 acc=0.8599
+[24/25] train_loss=0.0541 val_loss=0.4453 test_loss=0.4242 mAP=0.9488 acc=0.8988
+[25/25] train_loss=0.0644 val_loss=0.4836 test_loss=0.5077 mAP=0.9502 acc=0.8812
+Done, best mAP: 0.9585
+
+Starting config3_transfer.yaml
+/opt/conda/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/opt/conda/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Final model will be saved to: /app/src/../models/model3_transfer.pth
+[1/25] train_loss=0.6394 val_loss=0.5662 test_loss=0.5115 mAP=0.9000 acc=0.8059
+Best mAP=0.9000
+[2/25] train_loss=0.4811 val_loss=0.4272 test_loss=0.4278 mAP=0.9409 acc=0.8639
+Best mAP=0.9409
+[3/25] train_loss=0.4512 val_loss=0.3481 test_loss=0.3380 mAP=0.9509 acc=0.8795
+Best mAP=0.9509
+[4/25] train_loss=0.4265 val_loss=0.4105 test_loss=0.3953 mAP=0.9337 acc=0.8653
+[5/25] train_loss=0.3987 val_loss=0.3959 test_loss=0.3627 mAP=0.9428 acc=0.8646
+[6/25] train_loss=0.3958 val_loss=0.3494 test_loss=0.3397 mAP=0.9441 acc=0.8796
+[7/25] train_loss=0.3770 val_loss=0.3719 test_loss=0.3634 mAP=0.9490 acc=0.8678
+[8/25] train_loss=0.3694 val_loss=0.3561 test_loss=0.3463 mAP=0.9526 acc=0.8852
+Best mAP=0.9526
+[9/25] train_loss=0.3560 val_loss=0.3037 test_loss=0.3032 mAP=0.9578 acc=0.8930
+Best mAP=0.9578
+[10/25] train_loss=0.3435 val_loss=0.5664 test_loss=0.5435 mAP=0.9370 acc=0.8087
+[11/25] train_loss=0.3409 val_loss=0.3355 test_loss=0.3331 mAP=0.9505 acc=0.8827
+[12/25] train_loss=0.3271 val_loss=0.3618 test_loss=0.3659 mAP=0.9503 acc=0.8754
+[13/25] train_loss=0.3216 val_loss=0.3184 test_loss=0.3098 mAP=0.9608 acc=0.8895
+Best mAP=0.9608
+[14/25] train_loss=0.3014 val_loss=0.3387 test_loss=0.3490 mAP=0.9478 acc=0.8844
+[15/25] train_loss=0.3113 val_loss=0.2481 test_loss=0.2470 mAP=0.9667 acc=0.9204
+Best mAP=0.9667
+[16/25] train_loss=0.2938 val_loss=0.3074 test_loss=0.2929 mAP=0.9574 acc=0.8949
+[17/25] train_loss=0.2903 val_loss=0.3581 test_loss=0.3754 mAP=0.9540 acc=0.8781
+[18/25] train_loss=0.2799 val_loss=0.2692 test_loss=0.2638 mAP=0.9634 acc=0.9065
+[19/25] train_loss=0.2850 val_loss=0.3457 test_loss=0.3231 mAP=0.9488 acc=0.8839
+[20/25] train_loss=0.2714 val_loss=0.3064 test_loss=0.2808 mAP=0.9585 acc=0.8952
+[21/25] train_loss=0.2731 val_loss=0.3112 test_loss=0.2961 mAP=0.9539 acc=0.8921
+[22/25] train_loss=0.2680 val_loss=0.2726 test_loss=0.2629 mAP=0.9648 acc=0.9094
+[23/25] train_loss=0.2696 val_loss=0.3117 test_loss=0.2922 mAP=0.9609 acc=0.8914
+[24/25] train_loss=0.2584 val_loss=0.2890 test_loss=0.2858 mAP=0.9605 acc=0.9083
+[25/25] train_loss=0.2521 val_loss=0.3122 test_loss=0.2904 mAP=0.9580 acc=0.8989
+Done, best mAP: 0.9667
+Training done.
+```
+

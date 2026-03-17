@@ -107,7 +107,7 @@ if __name__ == "__main__":
     csv_path = os.path.join(MODELS_DIR, "metrics.csv")
     csv_rows = []
 
-    configs = ["config1.yaml", "config2.yaml", "config3.yaml"]
+    configs = ["config1.yaml", "config2.yaml", "config3.yaml", "config1_transfer.yaml", "config2_transfer.yaml", "config3_transfer.yaml"]
     for cfg_file in configs:
         cfg_path = os.path.join(CONFIGS_DIR, cfg_file)
         with open(cfg_path) as f:
