@@ -17,3 +17,6 @@ train:
 
 evaluate:
 	docker run --rm --name $(IMAGE_NAME) --gpus all --shm-size=2g -v $(DATA_DIR):/app/data -v ./models:/app/models $(IMAGE_NAME) python src/evaluate.py
+
+feature_maps:
+	docker run --rm --name $(IMAGE_NAME) --gpus all --shm-size=2g -v $(DATA_DIR):/app/data -v ./models:/app/models -v ./report:/app/report $(IMAGE_NAME) python src/feature_maps_statistics.py

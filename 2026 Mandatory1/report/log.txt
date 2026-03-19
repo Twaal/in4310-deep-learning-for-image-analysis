@@ -238,3 +238,19 @@ Done, best mAP: 0.9667
 Training done.
 ```
 
+Feature map ststs:
+```
+loaded /app/src/../models/model1.pth
+Train: 12034, Val: 2000, Test: 3000
+layers: ['stage1', 'stage2', 'stage3', 'stage4']
+generating feature maps
+five modules: ['conv1', 'stage1', 'stage2', 'stage3', 'stage4']
+computing stats
+module avg % non-positive
+conv1 42.842875599861145%
+stage1 31.09385955333709%
+stage2 49.98632802069188%
+stage3 62.86838331818579%
+stage4 66.70782828330994%
+done
+```

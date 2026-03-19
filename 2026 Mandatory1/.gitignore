@@ -1,3 +1,5 @@
 data/
 models/
 README.md
+*.pyc
+__pycache__/
