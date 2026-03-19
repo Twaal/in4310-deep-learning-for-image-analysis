@@ -1,7 +1,3 @@
-"""
-Task 3 - Feature map statistics
-"""
-
 import os
 import torch
 import numpy as np
