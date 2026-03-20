@@ -20,3 +20,6 @@ evaluate:
 
 feature_maps:
 	docker run --rm --name $(IMAGE_NAME) --gpus all --shm-size=2g -v $(DATA_DIR):/app/data -v ./models:/app/models -v ./report:/app/report $(IMAGE_NAME) python src/feature_maps_statistics.py
+
+confusion_matrix:
+	docker run --rm --name $(IMAGE_NAME) --gpus all --shm-size=2g -v $(DATA_DIR):/app/data -v ./models:/app/models -v ./report:/app/report $(IMAGE_NAME) python src/confusion_matrix.py

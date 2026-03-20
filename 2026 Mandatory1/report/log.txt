@@ -254,3 +254,21 @@ stage3 62.86838331818579%
 stage4 66.70782828330994%
 done
 ```
+
+
+```
+device: cuda
+loaded /app/src/../models/model3.pth
+Train: 12034, Val: 2000, Test: 3000
+layers: ['stage1', 'stage2', 'stage3', 'stage4']
+generating feature maps
+five modules: ['conv1', 'stage1', 'stage2', 'stage3', 'stage4']
+computing stats
+module avg % non-positive
+conv1 52.764866590499835%
+stage1 33.591164052486434%
+stage2 67.11240437626836%
+stage3 69.52724424004559%
+stage4 78.49174901843071%
+done
+```
