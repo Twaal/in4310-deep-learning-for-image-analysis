@@ -20,9 +20,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # part a
-def get_layer_names(pretrained=False):
-    if pretrained:
-        return ["layer1", "layer2", "layer3", "layer4"]
+def get_layer_names():
     return ["stage1", "stage2", "stage3", "stage4"]
 
 
@@ -162,8 +160,8 @@ def main():
     print(f"device: {device}")
 
     # load model
-    model_path = os.path.join(MODELS_DIR, "model3_transfer.pth")
-    model = load_model(model_path, num_layers=18, pretrained=True)
+    model_path = os.path.join(MODELS_DIR, "model3.pth")
+    model = load_model(model_path, num_layers=18, pretrained=False)
     model = model.to(device)
     model.eval()
     print(f"loaded {model_path}")
@@ -178,7 +176,7 @@ def main():
     loader = DataLoader(val_set, batch_size=16, shuffle=False, num_workers=0)
 
     # part a
-    layers = get_layer_names(pretrained=True)
+    layers = get_layer_names()
     print(f"layers: {layers}")
 
     # part c
@@ -186,7 +184,7 @@ def main():
     visualize(model, loader, layers, OUT_DIR, n_imgs=10)
 
     # part e
-    five = ["conv1", "layer1", "layer2", "layer3", "layer4"]
+    five = ["conv1", "stage1", "stage2", "stage3", "stage4"]
     print(f"five modules: {five}")
 
     # part f
