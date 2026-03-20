@@ -72,8 +72,8 @@ def evaluate(model, loader, criterion):
     return mAP, mean_acc, ap_per_class, acc_per_class, test_loss, all_probs
 
 
-def verify_scores(model_path, num_layers, scores_path, loader):
-    model = load_model(model_path, num_layers=num_layers)
+def verify_scores(model_path, num_layers, scores_path, loader, pretrained=False):
+    model = load_model(model_path, num_layers=num_layers, pretrained=pretrained)
     model = model.to(device)
     model.eval()
 
@@ -115,9 +115,10 @@ if __name__ == "__main__":
 
         model_path = os.path.join(os.path.dirname(__file__), "..", cfg["save_path"])
         num_layers = cfg["model"]["num_layers"]
+        pretrained = cfg["model"].get("pretrained", False)
         model_name = os.path.splitext(os.path.basename(model_path))[0]
 
-        model = load_model(model_path, num_layers=num_layers)
+        model = load_model(model_path, num_layers=num_layers, pretrained=pretrained)
         model = model.to(device)
 
         for split_name, loader in [("val", val_loader), ("test", test_loader)]:
@@ -144,7 +145,7 @@ if __name__ == "__main__":
                 scores_path = os.path.join(MODELS_DIR, f"{model_name}_scores.npy")
                 np.save(scores_path, scores)
                 print(f"Saved scores to {scores_path}")
-                verify_scores(model_path, num_layers, scores_path, test_loader)
+                verify_scores(model_path, num_layers, scores_path, test_loader, pretrained=pretrained)
 
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=csv_rows[0].keys())
