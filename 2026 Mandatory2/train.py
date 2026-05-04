@@ -23,7 +23,7 @@ from utils.plot import plot_metrics, plot_loss
 
 def train():
     device = torch.device('cuda', 0) if torch.cuda.is_available() else torch.device('cpu')
-
+    print("Training on device ", device)
     config = Config()
     print(vars(config))
 
@@ -44,10 +44,11 @@ def train():
     train_dataset = COCODataset(config.train_caption_file, config.resnet50_features_train_file, config, True)
     val_dataset = COCODataset(config.val_caption_file, config.resnet50_features_val_file, config, False)
     # Create dataloaders from the datasets
+    num_workers = 0 if os.name == 'nt' else 10  # Windows doesn't support multiprocessing in DataLoader
     train_loader = DataLoader(train_dataset, batch_size=config.batch_size, collate_fn=coco_collate_fn,
-                              shuffle=True, num_workers=10, pin_memory=True)
+                              shuffle=True, num_workers=num_workers, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=256, collate_fn=coco_collate_fn,
-                            shuffle=False, num_workers=10, pin_memory=True)
+                            shuffle=False, num_workers=num_workers, pin_memory=True)
 
     # Instantiate the model, optimiser, and loss function.
     model = ImageCaptionModel(512, config.embedding_size, config.hidden_size, config.vocabulary_size,
@@ -65,16 +66,21 @@ def train():
     step_losses = []
     metric_scores_epochs = defaultdict(list)
     best_cider = 0
+    best_bleu4 = 0
 
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    model_name = f"{os.environ['USER']}_{current_time}.pth"
+    current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    _user = os.environ.get('USER') or os.environ.get('USERNAME', 'user')
+    model_name = f"{_user}_{current_time}.pth"
     ckpt_path = Path(f'./ckpts/{model_name}')
 
     for epoch in range(config.num_epochs):
         running_loss = 0.0
         epoch_start_steps.append(global_step)
         epoch_start = time.time()
+        print("Starting epoch", epoch, flush=True)
         for features, captions, image_ids in train_loader:
+            # Print progress of current epoch
+            print(f"Epoch {epoch}, Step {global_step}/{len(train_loader)}, {100*(global_step/len(train_loader)):.2f}%", flush=True)
             # Teacher forcing: shift the captions.
             # For example, if captions are [<start>, token1, token2, ..., ., <PAD>, <PAD>],
             # then inputs are all tokens except the last, and targets are all tokens except the first.
@@ -116,15 +122,22 @@ def train():
             print('Saving model at', ckpt_path)
             save_checkpoint(model, ckpt_path)
 
+        current_bleu4 = metric_scores[Bleu(4).method()][0]
+        if current_bleu4 > best_bleu4:
+            best_bleu4 = current_bleu4
+            print('New best BLEU@4 score is', best_bleu4, flush=True)
+
         # Print some random captions to see that the model is learning something
         print('Some random captions from the model for the val set:', flush=True)
         for caption in random.sample(generated_captions, 5):
             print(caption, flush=True)
 
+    print(f'Training complete. Best CIDEr: {best_cider:.4f} | Best BLEU@4: {best_bleu4:.4f}', flush=True)
+
     # Plot losses and metric scores
     Path('plots').mkdir(parents=True, exist_ok=True)
-    plot_loss(f"plots/loss_plot_{os.environ['USER']}_{current_time}.jpg", step_losses, epoch_start_steps)
-    plot_metrics(f"plots/metrics_plot_{os.environ['USER']}_{current_time}.jpg", metric_scores_epochs, config.num_epochs)
+    plot_loss(f"plots/loss_plot_{_user}_{current_time}.jpg", step_losses, epoch_start_steps)
+    plot_metrics(f"plots/metrics_plot_{_user}_{current_time}.jpg", metric_scores_epochs, config.num_epochs)
 
 
 def save_checkpoint(model, ckpt_path: Path):

@@ -86,16 +86,13 @@ class COCODataset(Dataset):
                 # Skip if no feature is found for this image.
                 continue
 
-            # Load the frozen feature (a numpy array) and convert it to a torch tensor.
-            feature = self.frozen_features[key]
-            feature_tensor = torch.tensor(feature, dtype=torch.float)
-
-            # Convert caption and mask to tensors.
+            # Convert caption to tensor.
             caption_tensor = torch.tensor(caption_array, dtype=torch.long)
 
-            # Save the processed sample.
+            # Store the key so features can be looked up lazily in __getitem__,
+            # avoiding 5× duplication of the feature data in RAM.
             self.data.append({
-                'feature': feature_tensor,
+                'feature_key': key,
                 'caption': caption_tensor,
                 'image_id': img_id
             })
@@ -114,10 +111,8 @@ class COCODataset(Dataset):
             key = self.img_id_to_name.get(img_id, None)
             if key is None or key not in self.frozen_features:
                 continue
-            feature = self.frozen_features[key]
-            feature_tensor = torch.tensor(feature, dtype=torch.float)
             self.data.append({
-                'feature': feature_tensor,
+                'feature_key': key,
                 'caption': captions,
                 'image_id': img_id
             })
@@ -127,8 +122,9 @@ class COCODataset(Dataset):
 
     def __getitem__(self, index):
         sample = self.data[index]
-        # Return (image feature, caption indices, caption mask)
-        return sample['feature'], sample['caption'], sample['image_id']
+        feature = self.frozen_features[sample['feature_key']]
+        feature_tensor = torch.from_numpy(np.array(feature, dtype=np.float32))
+        return feature_tensor, sample['caption'], sample['image_id']
 
 
 def coco_collate_fn(batch):

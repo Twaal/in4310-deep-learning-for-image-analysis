@@ -17,10 +17,13 @@ class ImageCaptionModel(nn.Module):
         :param use_attention (bool): Use the attention mechanism if True
         """
         super(ImageCaptionModel, self).__init__()
-        # TODO: Check the task description and replace None with the correct feature projection layer
-        self.feature_projection = None
-        # TODO: Implement Global Average Pooling using torch.nn.AdaptiveAvgPool2d
-        self.avgpool = None
+        self.use_attention = use_attention
+        self.feature_projection = nn.Sequential(
+            nn.Dropout(0.25),
+            nn.Linear(cnn_feature_dim, hidden_size),
+            nn.LeakyReLU()
+        )
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.caption_rnn = CaptionRNN(
             cnn_feature_dim=cnn_feature_dim,
             vocabulary_size=vocab_size,
@@ -54,8 +57,8 @@ class ImageCaptionModel(nn.Module):
             )
             return logits, attn_weights
         else:
-            # TODO: Use self.avgpool to convert features from shape [batch_size, 512, 7, 7] to [batch_size, 512]
-            cnn_features = None
+            # converts [batch, 512, 7, 7] → [batch, 512]
+            cnn_features = self.avgpool(cnn_features).squeeze(-1).squeeze(-1)
             processed_img_feat = self.feature_projection(cnn_features)  # Resulting shape: [batch_size, hidden_size]
             logits, final_hidden = self.caption_rnn(
                 tokens=token_ids,
@@ -90,22 +93,18 @@ class CaptionRNN(nn.Module):
 
         # Embedding and output layers.
         self.embedding = nn.Embedding(vocabulary_size, embedding_size)
-        # TODO: The output layer (final layer) is a linear layer. What should be the size (dimensions) of its output?
-        #         Replace None with a linear layer with correct output size
-        self.output_layer = None  # nn.Linear(self.hidden_state_size, )
+        self.output_layer = nn.Linear(self.hidden_state_size, vocabulary_size)
 
         # Create attention module if needed.
         if self.use_attention:
             self.attention = Attention(cnn_feature_dim=cnn_feature_dim, hidden_dim=hidden_state_size)
 
-        # TODO: len(input_size_list) == num_rnn_layers and input_size_list[i] should contain the input size for layer i.
-        # This is used to populate self.cells
-        # For the first layer, the input is the concatenation of the token embedding and
-        # the raw feature vector or the attention-weighted feature vector.
-        input_sizes = None
+        # Layer 0 input: token embedding concatenated with projected image feature (hidden_state_size after projection).
+        # Subsequent layers input: hidden state output of the previous layer (hidden_state_size).
+        input_sizes = [embedding_size + hidden_state_size] + [hidden_state_size] * (num_layers - 1)
 
-        # TODO: Create a list of type "nn.ModuleList" and populate it with cells (layers) of type self.cell_type.
-        self.cells = None
+        cell_cls = RNNCell if cell_type == 'RNN' else LSTMCell
+        self.cells = nn.ModuleList([cell_cls(input_sizes[i], hidden_state_size) for i in range(num_layers)])
 
     def forward(self, tokens, features, is_train):
         """
@@ -130,20 +129,15 @@ class CaptionRNN(nn.Module):
         # Embed all tokens (for teacher forcing).
         token_embeddings = self.embedding(tokens)  # [batch, seq_len, embedding_size]
 
-        # TODO: Initialize hidden_states with correct dimensions depending on the cell type.
-        # hidden_states is a list of length self.num_layers with each element having a tensor of zeros of shape
-        # (batch_size, 2 * self.hidden_state_size).
-        # We use (2 * self.hidden_state_size) because we need a hidden state AND a cell memory for LSTM.
-        # We do not need this size for vanilla RNN cell but we modify the RNNCell instead to have the same
-        # interface for both RNNCell and LSTMCell. This avoids putting if statements at some places in the
-        # code below.
-        hidden_states = None
+        hidden_states = [
+            torch.zeros(batch_size, 2 * self.hidden_state_size, device=features.device)
+            for _ in range(self.num_layers)
+        ]
 
         logits_series = []
         attn_weights_series = [] if self.use_attention else None
 
-        # TODO: Fetch the first (index 0) embeddings that should go as input to the RNN.
-        current_token_vec = None  # Should have shape (batch_size, embedding_size)
+        current_token_vec = token_embeddings[:, 0, :]  # [batch, embedding_size]
 
         for t in range(seq_len):
             new_states = []
@@ -155,25 +149,20 @@ class CaptionRNN(nn.Module):
             for layer in range(self.num_layers):
                 if layer == 0:
                     if self.use_attention:
-                        # TODO:  Compute attention: use previous hidden state (only the first half of
-                        #        hidden_states variable) to attend over features.
-                        prev_hidden = None
+                        prev_hidden = hidden_states[0][:, :self.hidden_state_size]
                         context, alpha = self.attention(features, prev_hidden)
                         attn_weights_series.append(alpha)
-                        # TODO: Concatenate token embedding with the attended image context.
-                        cell_input = None
+                        cell_input = torch.cat([current_token_vec, context], dim=1)
                     else:
-                        # TODO: Without attention, concatenate the token embedding with the image feature.
-                        cell_input = None
+                        cell_input = torch.cat([current_token_vec, features], dim=1)
                 else:
-                    cell_input = None  # TODO: Initialise to the output of the previous layer
+                    cell_input = new_states[layer - 1][:, :self.hidden_state_size]
 
-                new_state = None  # TODO: Call the cell for this layer
+                new_state = self.cells[layer](cell_input, hidden_states[layer])
                 new_states.append(new_state)
 
                 if layer == self.num_layers - 1:
-                    # TODO: Get logits from the self.output_layer and append them to logits_series
-                    logits = None
+                    logits = self.output_layer(new_state[:, :self.hidden_state_size])
                     logits_series.append(logits)
                     if t < seq_len - 1:
                         if is_train:
