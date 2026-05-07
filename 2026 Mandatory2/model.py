@@ -211,18 +211,27 @@ class LSTMCell(nn.Module):
         #       Note: The actual input tensor will have 2 * HIDDEN_STATE_SIZE because it contains both
         #             hidden state and cell's memory
 
+        n = hidden_state_size + input_size
+        std = (1.0 / n) ** 0.5
+
+        def make_weight():
+            return nn.Parameter(torch.empty(n, hidden_state_size).uniform_(-std, std))
+
+        def make_bias():
+            return nn.Parameter(2.0 * torch.ones(1, hidden_state_size))
+
         # Forget gate parameters
-        self.weight_f = None
-        self.bias_f = None
+        self.weight_f = make_weight()
+        self.bias_f = make_bias()
         # Input gate parameters
-        self.weight_i = None
-        self.bias_i = None
+        self.weight_i = make_weight()
+        self.bias_i = make_bias()
         # Output gate parameters
-        self.weight_o = None
-        self.bias_o = None
+        self.weight_o = make_weight()
+        self.bias_o = make_bias()
         # Memory cell parameters
-        self.weight = None
-        self.bias = None
+        self.weight = make_weight()
+        self.bias = make_bias()
 
     def forward(self, x, hidden_state):
         """
@@ -234,11 +243,20 @@ class LSTMCell(nn.Module):
         :return: The updated hidden state (including memory) of the LSTM cell.
                  Shape: [batch_size, 2 * HIDDEN_STATE_SIZE]
         """
-        # TODO: Implement the LSTM equations to get the new hidden state, cell memory and return them.
-        #       The first half of the returned value must represent the new hidden state and the second half
-        #       new cell state.
-        new_hidden_state = None
-        return new_hidden_state
+        h_old = hidden_state[:, :self.hidden_state_size]
+        c_old = hidden_state[:, self.hidden_state_size:]
+
+        xh = torch.cat([x, h_old], dim=1)
+
+        f = torch.sigmoid(xh @ self.weight_f + self.bias_f)
+        i = torch.sigmoid(xh @ self.weight_i + self.bias_i)
+        o = torch.sigmoid(xh @ self.weight_o + self.bias_o)
+        g = torch.tanh(xh @ self.weight + self.bias)
+
+        c_new = f * c_old + i * g
+        h_new = o * torch.tanh(c_new)
+
+        return torch.cat([h_new, c_new], dim=1)
 
 
 class Attention(nn.Module):

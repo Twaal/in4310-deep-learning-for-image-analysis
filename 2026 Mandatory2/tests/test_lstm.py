@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from model import LSTMCell
+from model_lstm import LSTMCell
 
 HIDDEN_STATE_SIZE, INPUT_SIZE = 7, 3
 LSTM = LSTMCell(hidden_state_size=HIDDEN_STATE_SIZE, input_size=INPUT_SIZE)
